@@ -4,14 +4,16 @@ var numGuessingCount = 0;
 var numGuessingMode = '없음';
 var GuessingHistory = [];
 var totalLen = 0;
+var difficulty = '없음';
 module.exports = {
-    startGame: (value, mode, _totalLen = 0) => {
+    startGame: (value, mode, _difficulty, _totalLen = 0) => {
         numGuessingCount = 0;
         numGuessingAnswer = value;
         GuessingHistory = [];
         isGuessingNum = true;
         numGuessingMode = mode;
         totalLen = _totalLen;
+        difficulty = _difficulty;
     },
 
     compareNum: (value, mode, totalLen = 0) => {
@@ -91,6 +93,7 @@ module.exports = {
         numGuessingAnswer = -1;
         numGuessingCount = 0;
         numGuessingMode = '없음';
+        difficulty = '없음';
         GuessingHistory = [];
     },
 
@@ -104,6 +107,10 @@ module.exports = {
 
     getTotalLen: () => {
         return totalLen;
+    },
+
+    getDifficulty: () => {
+        return difficulty;
     },
 
     addHistory: (value, result) => {

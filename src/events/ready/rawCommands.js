@@ -1,6 +1,6 @@
 const guessingNumber = require('../../utils/minigames/guessingNumber');
 const { devs, devMode } = require('../../../config.json')
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 
 module.exports = (client) => {
     
@@ -77,6 +77,20 @@ module.exports = (client) => {
                             },
                         );
 
+                    if(mode === '일치율')
+                    {
+                        //set footer image
+                        const attachment = new AttachmentBuilder('./src/images/numGuessingGame/gameExplanation.png', { name: 'gameExplanation.png'});
+                        embed.setFooter(
+                            {
+                                text: '일치율은 각 자릿수의 일치율의 평균입니다.',
+                            }
+                        );
+
+                        message.reply({ embeds: [embed] , files: [attachment]});
+                        return;
+                    }
+
                     message.reply({ embeds: [embed] });
                     return;
                 }
@@ -100,7 +114,7 @@ module.exports = (client) => {
                 if (res === 0)
                 {
                     guessingNumber.GuessingCountPlus(1);
-                    message.reply(`정답입니다! 게임을 종료합니다. (시도횟수: ${guessingNumber.numGuessingCount()})`);
+                    message.reply(`정답입니다! 게임을 종료합니다. (업다운 | 난이도: ${guessingNumber.getDifficulty()}, 시도횟수: ${guessingNumber.numGuessingCount()})`);
                     return;
                 }
                 else if (res === 1)
@@ -134,7 +148,7 @@ module.exports = (client) => {
                 if (res === 0)
                 {
                     guessingNumber.GuessingCountPlus(1);
-                    message.reply(`정답입니다! 게임을 종료합니다. (시도횟수: ${guessingNumber.numGuessingCount()})`);
+                    message.reply(`정답입니다! 게임을 종료합니다. (배수 | 난이도: ${guessingNumber.getDifficulty()}, 시도횟수: ${guessingNumber.numGuessingCount()})`);
                     return;
                 }
                 else if (res === 1)
@@ -170,7 +184,7 @@ module.exports = (client) => {
                 if (res === 100)
                 {
                     guessingNumber.GuessingCountPlus(1);
-                    message.reply(`정답입니다! 게임을 종료합니다. (시도횟수: ${guessingNumber.numGuessingCount()})`);
+                    message.reply(`정답입니다! 게임을 종료합니다. (일치율 | 난이도: ${guessingNumber.getDifficulty()}, 시도횟수: ${guessingNumber.numGuessingCount()})`);
                     return;
                 }
                 else if (res === -1)

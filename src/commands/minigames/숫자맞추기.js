@@ -160,11 +160,10 @@ module.exports = {
 
         if (mode === '일치율')
         {
-            //ans = Math.floor(Math.random() * (endNum + 1));
-            ans = 3;
+            ans = Math.floor(Math.random() * (endNum + 1));
         }
 
-        await guessingNumber.startGame(ans, mode, endNum.toString().length);
+        await guessingNumber.startGame(ans, mode, difficulty, endNum.toString().length);
         if (mode === '업다운')
             await interaction.reply(`1부터 ${endNum} 사이의 난수가 생성되었습니다.`);
         else if (mode === '배수')
