@@ -54,6 +54,10 @@ module.exports = {
                     name: '하드코어',
                     value: '하드코어',
                 },
+                {
+                    name: '익스트림',
+                    value: '익스트림',
+                },
             ],
             required: true,
         },
@@ -99,6 +103,10 @@ module.exports = {
             {
                 endNum = 10000000;
             }
+            else if (difficulty === '익스트림')
+            {
+                endNum = 10000000000;
+            }
             else endNum = 0;
         }
 
@@ -110,13 +118,17 @@ module.exports = {
             }
             else if (difficulty === '보통')
             {
-                endNum = 150;
+                endNum = 100;
             }
             else if (difficulty === '어려움')
             {
-                endNum = 450;
+                endNum = 320;
             }
             else if (difficulty === '하드코어')
+            {
+                endNum = 650;
+            }
+            else if (difficulty === '익스트림')
             {
                 endNum = 800;
             }
@@ -139,7 +151,11 @@ module.exports = {
             }
             else if (difficulty === '하드코어')
             {
-                endNum =   9999999;
+                endNum = 9999999;
+            }
+            else if (difficulty === '익스트림')
+            {
+                endNum = 9999999999;
             }
             else endNum = 0;
         }

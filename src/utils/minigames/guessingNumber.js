@@ -14,6 +14,8 @@ module.exports = {
         numGuessingMode = mode;
         totalLen = _totalLen;
         difficulty = _difficulty;
+
+        //console.log(`Answer: ${numGuessingAnswer}`)
     },
 
     compareNum: (value, mode, totalLen = 0) => {
