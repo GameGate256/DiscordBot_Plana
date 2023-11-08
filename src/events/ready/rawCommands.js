@@ -6,6 +6,7 @@ module.exports = (client) => {
     
     client.on('messageCreate', (message) => {
         if (message.author.bot) return;
+        
     
         if (message.content === '프라나') {
             message.reply('여기 있습니다.');

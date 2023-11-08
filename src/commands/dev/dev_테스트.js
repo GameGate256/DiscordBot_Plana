@@ -6,11 +6,9 @@ module.exports = {
     devsOnly: true,
     //testOnly: Boolean,
     //options: Object[],
-    deleted: false,
+    deleted: true,
 
-    callback: (client, interaction) => {
-        interaction.deferReply();
-        interaction.deleteReply();
-        interaction.channel.send("<:residentsujinper:1036686506200408105>");
+    callback: async (client, interaction) => {
+        await interaction.reply("...");
     },
 };
