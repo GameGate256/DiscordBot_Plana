@@ -50,7 +50,7 @@ module.exports = (client) => {
                 message.reply({ embeds: [embed] });
         }
 
-        if (args[1] === 'ㅅ') //숫자맞추기
+        else if (args[1] === 'ㅅ') //숫자맞추기
         {
 
             if (!guessingNumber.isGuessingNum())
@@ -102,13 +102,15 @@ module.exports = (client) => {
                 }
             }
 
+            const num = parseInt(args[2].replace(/,/g, '').replace(/\./g, ''));
+
             let res;
             if(mode === '업다운' || mode === '배수')
-                res = guessingNumber.compareNum(parseInt(args[2]), mode);
+                res = guessingNumber.compareNum(num, mode);
             else if (mode === '일치율')
-                res = guessingNumber.compareNum(parseInt(args[2]), mode, guessingNumber.getTotalLen());
+                res = guessingNumber.compareNum(num, mode, guessingNumber.getTotalLen());
 
-            const isRedupe = guessingNumber.checkRedupe(parseInt(args[2]));
+            const isRedupe = guessingNumber.checkRedupe(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","));
 
             if (mode === '업다운')
             {
@@ -127,7 +129,7 @@ module.exports = (client) => {
                     }
                     message.reply(`다운. (${args[2]})`);
                     guessingNumber.GuessingCountPlus(1);
-                    guessingNumber.addHistory(parseInt(args[2]), ': 다운');
+                    guessingNumber.addHistory(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","), ': 다운');
                     return;
                 }
                 else if (res === -1)
@@ -139,7 +141,7 @@ module.exports = (client) => {
                     }
                     message.reply(`업. (${args[2]})`);
                     guessingNumber.GuessingCountPlus(1);
-                    guessingNumber.addHistory(parseInt(args[2]), ': 업');
+                    guessingNumber.addHistory(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","), ': 업');
                     return;
                 }
                 else return;
@@ -161,7 +163,7 @@ module.exports = (client) => {
                     }
                     message.reply(`정답 숫자는 ${args[2]}의 배수입니다.`);
                     guessingNumber.GuessingCountPlus(1);
-                    guessingNumber.addHistory(parseInt(args[2]), '의 배수');
+                    guessingNumber.addHistory(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","), '의 배수');
                     return;
                 }
                 else if (res === -1)
@@ -173,7 +175,7 @@ module.exports = (client) => {
                     }
                     message.reply(`정답 숫자는 ${args[2]}의 배수가 아닙니다.`);
                     guessingNumber.GuessingCountPlus(1);
-                    guessingNumber.addHistory(parseInt(args[2]), '의 배수 아님');
+                    guessingNumber.addHistory(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","), '의 배수 아님');
                     return;
                 }
                 else return;
@@ -202,11 +204,19 @@ module.exports = (client) => {
                     }
                     message.reply(`일치율: ${res.toFixed(2)}%`);
                     guessingNumber.GuessingCountPlus(1);
-                    guessingNumber.addHistory(parseInt(args[2]), `${res.toFixed(2)}`);
+                    guessingNumber.addHistory(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","), `${res.toFixed(2)}`);
                     return;
                 }
             
             }
+        }
+
+        else if (args[1] === 'ㅌ')
+        {
+            return;
+            const num = parseInt(args[2].replace(/,/g, '').replace(/\./g, ''));
+
+            message.reply(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","));
         }
     });
     
@@ -233,7 +243,7 @@ function historyStringMaker(mode)
 
         //sort history
         history.sort((a, b) => {
-            return a.value - b.value;
+            return parseInt(a.value.replace(/,/g, '')) - parseInt(b.value.replace(/,/g, ''));
         });
 
         for (let i = 0; i < len; i++)
@@ -258,11 +268,11 @@ function historyStringMaker(mode)
         //가장 가까운 업: 1234 (n번째 시도)
         //가장 가까운 다운: 1234 (n번째 시도)
 
-        if (up !== -1) str += `가장 가까운 업: \`${history[up].value}\` (${history[up].attempt}번째 시도)\n`;
-        else str += `가장 가까운 업: \`없음\`\n`;
-
         if (down !== -1) str += `가장 가까운 다운: \`${history[down].value}\` (${history[down].attempt}번째 시도)\n`;
         else str += `가장 가까운 다운: \`없음\`\n`;
+
+        if (up !== -1) str += `가장 가까운 업:   \`${history[up].value}\` (${history[up].attempt}번째 시도)\n`;
+        else str += `가장 가까운 업: \`없음\`\n`;
 
         return str;
     }

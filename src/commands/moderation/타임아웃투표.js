@@ -107,12 +107,14 @@ module.exports = {
                 {
                     //timeout target user
                     await targetUser.timeout(timeoutTime * 1000, reason);
-                    await interaction.editReply(`투표 종료. 과반수 찬성으로 ${targetUser}님을 ${timeoutTime}초 동안 타임아웃 시켰습니다.`);
+                    await interaction.deleteReply();
+                    await interaction.channel.send(`투표 종료. 과반수 찬성으로 ${targetUser}님을 ${timeoutTime}초 동안 타임아웃 시켰습니다. (사유: ${reason})`);
                     await message.delete();
                 }
                 else
                 {
-                    await interaction.editReply('투표 종료. 찬성표가 과반수에 미치지 못해 타임아웃을 시키지 않습니다.');
+                    await interaction.deleteReply();
+                    await interaction.channel.send('투표 종료. 찬성표가 과반수에 미치지 못해 타임아웃을 시키지 않습니다.');
                     await message.delete();
                 }
             });

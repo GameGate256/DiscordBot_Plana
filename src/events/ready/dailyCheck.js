@@ -23,7 +23,7 @@ module.exports = (client) => {
         if (!serverlist) return;
 
         //find the userlist
-        const userlist = serverlist.userid.find(userid => userid.id === userId);
+        const userlist = serverlist.user.find(user => user.id === userId);
         if (!userlist) return;
 
         //check if the user has already checked today
@@ -47,12 +47,9 @@ module.exports = (client) => {
         //save the data
         fs.writeFileSync(servermemberdataPath, JSON.stringify(servermemberdata));
 
-        message.reply(`반갑습니다. ${message.author}선생님. 오늘 ${userlist.dailyCount}번째 출석하셨습니다.`);
+        message.reply(`반갑습니다, ${message.author} 선생님. 오늘로 ${userlist.dailyCount}번째 출석하셨습니다.`);
 
-        servermemberdata = JSON.parse(fs.readFileSync(servermemberdataPath));
-
-        //find current server and user
-
-        //message.reply(author.username);
+        //reload the data
+        servermemberdata = JSON.parse(fs.readFileSync(servermemberdataPath)); 
     });
 }
