@@ -22,37 +22,82 @@ module.exports = {
 
             if (data.serverlist.some(serverlist => serverlist.serverid === serverId))
             { 
+                //save previous serverlist data
+                const previousServerlist = data.serverlist.find(serverlist => serverlist.serverid === serverId);
                 //delete the previous data
                 data.serverlist = data.serverlist.filter(serverlist => serverlist.serverid !== serverId);
+                
+                //get all members in the server
+                const members = await server.members.fetch();
+                const memberIds = members.map(member => member.id);
+
+                //remove bots from the list
+                const botIds = members.filter(member => member.user.bot).map(member => member.id);
+                const memberIdsWithoutBots = memberIds.filter(id => !botIds.includes(id));
+
+                const serverlist = {
+                    "serverid": serverId,
+                    "user": memberIdsWithoutBots.map(id => {
+                        const previousUserlist = previousServerlist.user.find(user => user.id === id);
+                        if (previousUserlist)
+                        {
+                            return {
+                                "id": id,
+                                "lastCheckedDate": previousUserlist.lastCheckedDate,
+                                "dailyCount": previousUserlist.dailyCount
+                            };
+                        }
+                        else
+                        {
+                            return {
+                                "id": id,
+                                "lastCheckedDate": null,
+                                "dailyCount": 0
+                            };
+                        }
+                    })
+                };
+
+                //dont delete previous data, just add the new serverlist
+                data.serverlist.push(serverlist);
+
+                fs.writeFileSync(dataPath, JSON.stringify(data));
+
+                await interaction.editReply(`서버 갱신이 완료되었습니다. 서버 ID: ${serverId}`);
+                return;
             }
 
-            //get all members in the server
-            const members = await server.members.fetch();
-            const memberIds = members.map(member => member.id);
+            else
+            {
+                //get all members in the server
+                const members = await server.members.fetch();
+                const memberIds = members.map(member => member.id);
 
-            //remove bots from the list
-            const botIds = members.filter(member => member.user.bot).map(member => member.id);
-            const memberIdsWithoutBots = memberIds.filter(id => !botIds.includes(id));
+                //remove bots from the list
+                const botIds = members.filter(member => member.user.bot).map(member => member.id);
+                const memberIdsWithoutBots = memberIds.filter(id => !botIds.includes(id));
 
-            //add serverlist data to the json file
-            const serverlist = {
-                "serverid": serverId,
-                "userid": memberIdsWithoutBots.map(id => {
-                    return {
-                        "id": id,
-                        "lastCheckedDate": null,
-                        "dailyCount": 0
-                    };
-                })
-            };
+                //add serverlist data to the json file
+                const serverlist = {
+                    "serverid": serverId,
+                    "user": memberIdsWithoutBots.map(id => {
+                        return {
+                            "id": id,
+                            "lastCheckedDate": null,
+                            "dailyCount": 0
+                        };
+                    })
+                };
 
-            //dont delete previous data, just add the new serverlist
-            data.serverlist.push(serverlist);
+                data.serverlist.push(serverlist);
 
-            fs.writeFileSync(dataPath, JSON.stringify(data));
+                fs.writeFileSync(dataPath, JSON.stringify(data));
 
-            await interaction.editReply(`서버 등록(또는 갱신)이 완료되었습니다. 서버 ID: ${serverId}`);
-            return;
+                await interaction.editReply(`서버 등록이 완료되었습니다. 서버 ID: ${serverId}`);
+                return;
+            
+            }
+
         }
         catch (error)
         {
