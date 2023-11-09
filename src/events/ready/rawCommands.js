@@ -271,7 +271,7 @@ function historyStringMaker(mode)
         if (down !== -1) str += `가장 가까운 다운: \`${history[down].value}\` (${history[down].attempt}번째 시도)\n`;
         else str += `가장 가까운 다운: \`없음\`\n`;
 
-        if (up !== -1) str += `가장 가까운 업:   \`${history[up].value}\` (${history[up].attempt}번째 시도)\n`;
+        if (up !== -1) str += `가장 가까운 업: \`${history[up].value}\` (${history[up].attempt}번째 시도)\n`;
         else str += `가장 가까운 업: \`없음\`\n`;
 
         return str;
