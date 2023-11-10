@@ -104,6 +104,12 @@ module.exports = (client) => {
 
             const num = parseInt(args[2].replace(/,/g, '').replace(/\./g, ''));
 
+            if (num >  999999999999999 || num < 0) // 99999,99999,99999
+            {
+                message.reply('입력한 숫자가 범위를 초과했습니다.');
+                return;
+            }
+
             let res;
             if(mode === '업다운' || mode === '배수')
                 res = guessingNumber.compareNum(num, mode);
@@ -214,9 +220,10 @@ module.exports = (client) => {
         else if (args[1] === 'ㅌ')
         {
             return;
-            const num = parseInt(args[2].replace(/,/g, '').replace(/\./g, ''));
-
-            message.reply(num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","));
+            let num = parseInt(args[2].replace(/,/g, '').replace(/\./g, ''));
+            num = new Number(num).toFixed();
+            
+            message.reply(`beforePharse: ${args[2].replace(/,/g, '').replace(/\./g, '')}, num:${num}, format:${num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}, typeofnum: ${typeof(num)}`);
         }
     });
     
@@ -243,7 +250,7 @@ function historyStringMaker(mode)
 
         //sort history
         history.sort((a, b) => {
-            return parseInt(a.value.replace(/,/g, '')) - parseInt(b.value.replace(/,/g, ''));
+            return parseInt(a.value.replace(/,/g, '').replace(/\./g, '')) - parseInt(b.value.replace(/,/g, '').replace(/\./g, ''));
         });
 
         for (let i = 0; i < len; i++)
