@@ -16,6 +16,10 @@ module.exports = (client) => {
             message.reply('\'ㅍ\'은 프라나의 접두사입니다. 더 많은 명령어를 보시려면 \"ㅍ 도움말\"을 입력해주세요.');
         }
 
+        if (message.content === '축하해줘' && !devMode) {
+            message.reply("축하합니다.");
+        }
+
         const prefix = 'ㅍ';
         if (!message.content.startsWith(prefix)) return;
         
@@ -226,7 +230,6 @@ module.exports = (client) => {
             message.reply(`beforePharse: ${args[2].replace(/,/g, '').replace(/\./g, '')}, num:${num}, format:${num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}, typeofnum: ${typeof(num)}`);
         }
     });
-    
 };
 
 function historyStringMaker(mode)
