@@ -146,7 +146,7 @@ module.exports = {
     },
 
     deleted: false,
-    devsOnly: true,
+    devsOnly: false,
     name: '타임아웃투표',
     description: '[대상]의 [타임아웃시간]에 대한 타임아웃 투표를 시작합니다.',
     options: [
