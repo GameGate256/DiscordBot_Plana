@@ -1,5 +1,7 @@
 const { Client, Interaction, ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 
+let CoolDownUsers = [];
+
 module.exports = {
 
     /**
@@ -61,16 +63,23 @@ module.exports = {
                 return;
             }
 
-            if (timeoutTime < 1 || timeoutTime > 120)
+            if (timeoutTime < 1 || timeoutTime > 30)
             {
-                await interaction.editReply('타임아웃 시간의 범위는 1초부터 120초까지 입니다.');
+                await interaction.editReply('타임아웃 시간의 범위는 1초부터 30초까지 입니다.');
+                return;
+            }
+
+            //if target is already in cooldown list
+            if (CoolDownUsers.includes(targetUser.id))
+            {
+                await interaction.editReply(`해당 유저는 타임아웃을 당한지 얼마 안되었습니다. 잠시 후 다시 시도해주세요.`);
                 return;
             }
 
             //create timeout vote embed
             const embed = new EmbedBuilder()
                 .setTitle('타임아웃 투표')
-                .setDescription(`${targetUser}님을 ${timeoutTime}초 동안 타임아웃 시키겠습니까? (투표 시간: 10초)`)
+                .setDescription(`${targetUser}님을 ${timeoutTime}초 동안 타임아웃 시키겠습니까? (투표 시간: 5초)`)
                 .setColor('#ff0000')
                 .addFields({
                     name: '사유',
@@ -90,7 +99,7 @@ module.exports = {
                 return ['✅', '❌'].includes(reaction.emoji.name) && user.id === interaction.user.id;
             };
 
-            const collector = message.createReactionCollector({ filter, time: 10000 });
+            const collector = message.createReactionCollector({ filter, time: 5000 });
 
             collector.on('end', async (reaction, user) => {
                 const yes = message.reactions.cache.get('✅').count;
@@ -110,6 +119,15 @@ module.exports = {
                     await interaction.deleteReply();
                     await interaction.channel.send(`투표 종료. 과반수 찬성으로 ${targetUser}님을 ${timeoutTime}초 동안 타임아웃 시켰습니다. (사유: ${reason})`);
                     await message.delete();
+
+                    //add  target user and time to cooldown list
+                    //push user and time
+                    CoolDownUsers.push(targetUser.id);
+                    //remove user and time after 3 seconds
+                    setTimeout(() => {
+                        CoolDownUsers.splice(CoolDownUsers.indexOf(targetUser.id), 1);
+                    }, 10 * 1000);
+
                 }
                 else
                 {
@@ -128,7 +146,7 @@ module.exports = {
     },
 
     deleted: false,
-    devsOnly: false,
+    devsOnly: true,
     name: '타임아웃투표',
     description: '[대상]의 [타임아웃시간]에 대한 타임아웃 투표를 시작합니다.',
     options: [
@@ -140,7 +158,7 @@ module.exports = {
         },
         {
             name: '타임아웃시간',
-            description: '타임아웃 시간을 입력합니다. (단위: 초, 범위: 1 ~ 120)',
+            description: '타임아웃 시간을 입력합니다. (단위: 초, 범위: 1 ~ 30)',
             type: ApplicationCommandOptionType.Integer,
             required: true,
         },

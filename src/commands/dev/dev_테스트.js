@@ -13,9 +13,13 @@ module.exports = {
             required: true,
         },
     ],
-    deleted: true,
+    deleted: false,
 
     callback: async (client, interaction) => {
-        await interaction.reply("...");
+        await interaction.deferReply();
+        await interaction.deleteReply();
+        await interaction.channel.send('프');
+        await interaction.channel.send('라');
+        await interaction.channel.send('나');
     },
 };
