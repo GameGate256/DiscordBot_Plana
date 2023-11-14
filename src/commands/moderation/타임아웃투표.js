@@ -63,9 +63,9 @@ module.exports = {
                 return;
             }
 
-            if (timeoutTime < 1 || timeoutTime > 30)
+            if (timeoutTime < 1 || timeoutTime > 20)
             {
-                await interaction.editReply('타임아웃 시간의 범위는 1초부터 30초까지 입니다.');
+                await interaction.editReply('타임아웃 시간의 범위는 1초부터 20초까지 입니다.');
                 return;
             }
 
@@ -158,7 +158,7 @@ module.exports = {
         },
         {
             name: '타임아웃시간',
-            description: '타임아웃 시간을 입력합니다. (단위: 초, 범위: 1 ~ 30)',
+            description: '타임아웃 시간을 입력합니다. (단위: 초, 범위: 1 ~ 20)',
             type: ApplicationCommandOptionType.Integer,
             required: true,
         },
